@@ -15,6 +15,8 @@ static int swallowfloating    = 0;        /* 1 means swallow floating windows by
 static int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
+static int floatposgrid_x           = 5;        /* float grid columns */
+static int floatposgrid_y           = 5;        /* float grid rows */
 static const int user_bh            = 24;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -63,12 +65,12 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	*/
-	/* class    instance      title       	 tags mask    isfloating   isterminal  noswallow  monitor */
-	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,           0,         0,        -1 },
-	{ TERMCLASS,   NULL,       NULL,       	    0,            0,           1,         0,        -1 },
-	{ NULL,       NULL,       "Event Tester",   0,            0,           0,         1,        -1 },
-	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           1,         0,        -1 },
-	{ NULL,      "spcalc",    NULL,       	    SPTAG(1),     1,           1,         0,        -1 },
+	/* class    instance      title       	 tags mask    isfloating   floatpos	isterminal  noswallow  monitor */
+	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,           NULL,	  0,         0,        -1 },
+	{ TERMCLASS,   NULL,       NULL,       	    0,            0,           NULL,	  1,         0,        -1 },
+	{ NULL,       NULL,       "Event Tester",   0,            0,           NULL,	  0,         1,        -1 },
+	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     1,           NULL,	  1,         0,        -1 },
+	{ NULL,      "spcalc",    NULL,       	    SPTAG(1),     1,           NULL,	  1,         0,        -1 },
 };
 
 /* layout(s) */
@@ -315,6 +317,45 @@ static Key keys[] = {
 	/* { MODKEY|Mod4Mask,              XK_o,      incrohgaps,     {.i = -1 } }, */
 	/* { MODKEY|ShiftMask,             XK_y,      incrovgaps,     {.i = +1 } }, */
 	/* { MODKEY|ShiftMask,             XK_o,      incrovgaps,     {.i = -1 } }, */
+
+	/* /1* Client position is limited to monitor window area *1/ */
+	/* { Mod4Mask,                     XK_u,      floatpos,       {.v = "-26x -26y" } }, // ↖ */
+	/* { Mod4Mask,                     XK_i,      floatpos,       {.v = "  0x -26y" } }, // ↑ */
+	/* { Mod4Mask,                     XK_o,      floatpos,       {.v = " 26x -26y" } }, // ↗ */
+	/* { Mod4Mask,                     XK_j,      floatpos,       {.v = "-26x   0y" } }, // ← */
+	/* { Mod4Mask,                     XK_l,      floatpos,       {.v = " 26x   0y" } }, // → */
+	/* { Mod4Mask,                     XK_m,      floatpos,       {.v = "-26x  26y" } }, // ↙ */
+	/* { Mod4Mask,                     XK_comma,  floatpos,       {.v = "  0x  26y" } }, // ↓ */
+	/* { Mod4Mask,                     XK_period, floatpos,       {.v = " 26x  26y" } }, // ↘ */
+	/* /1* Absolute positioning (allows moving windows between monitors) *1/ */
+	/* { Mod4Mask|ControlMask,         XK_u,      floatpos,       {.v = "-26a -26a" } }, // ↖ */
+	/* { Mod4Mask|ControlMask,         XK_i,      floatpos,       {.v = "  0a -26a" } }, // ↑ */
+	/* { Mod4Mask|ControlMask,         XK_o,      floatpos,       {.v = " 26a -26a" } }, // ↗ */
+	/* { Mod4Mask|ControlMask,         XK_j,      floatpos,       {.v = "-26a   0a" } }, // ← */
+	/* { Mod4Mask|ControlMask,         XK_l,      floatpos,       {.v = " 26a   0a" } }, // → */
+	/* { Mod4Mask|ControlMask,         XK_m,      floatpos,       {.v = "-26a  26a" } }, // ↙ */
+	/* { Mod4Mask|ControlMask,         XK_comma,  floatpos,       {.v = "  0a  26a" } }, // ↓ */
+	/* { Mod4Mask|ControlMask,         XK_period, floatpos,       {.v = " 26a  26a" } }, // ↘ */
+	/* /1* Resize client, client center position is fixed which means that client expands in all directions *1/ */
+	/* { Mod4Mask|ShiftMask,           XK_u,      floatpos,       {.v = "-26w -26h" } }, // ↖ */
+	/* { Mod4Mask|ShiftMask,           XK_i,      floatpos,       {.v = "  0w -26h" } }, // ↑ */
+	/* { Mod4Mask|ShiftMask,           XK_o,      floatpos,       {.v = " 26w -26h" } }, // ↗ */
+	/* { Mod4Mask|ShiftMask,           XK_j,      floatpos,       {.v = "-26w   0h" } }, // ← */
+	/* { Mod4Mask|ShiftMask,           XK_k,      floatpos,       {.v = "800W 800H" } }, // · */
+	/* { Mod4Mask|ShiftMask,           XK_l,      floatpos,       {.v = " 26w   0h" } }, // → */
+	/* { Mod4Mask|ShiftMask,           XK_m,      floatpos,       {.v = "-26w  26h" } }, // ↙ */
+	/* { Mod4Mask|ShiftMask,           XK_comma,  floatpos,       {.v = "  0w  26h" } }, // ↓ */
+	/* { Mod4Mask|ShiftMask,           XK_period, floatpos,       {.v = " 26w  26h" } }, // ↘ */
+	/* /1* Client is positioned in a floating grid, movement is relative to client's current position *1/ */
+	/* { Mod4Mask|Mod1Mask,            XK_u,      floatpos,       {.v = "-1p -1p" } }, // ↖ */
+	/* { Mod4Mask|Mod1Mask,            XK_i,      floatpos,       {.v = " 0p -1p" } }, // ↑ */
+	/* { Mod4Mask|Mod1Mask,            XK_o,      floatpos,       {.v = " 1p -1p" } }, // ↗ */
+	/* { Mod4Mask|Mod1Mask,            XK_j,      floatpos,       {.v = "-1p  0p" } }, // ← */
+	/* { Mod4Mask|Mod1Mask,            XK_k,      floatpos,       {.v = " 0p  0p" } }, // · */
+	/* { Mod4Mask|Mod1Mask,            XK_l,      floatpos,       {.v = " 1p  0p" } }, // → */
+	/* { Mod4Mask|Mod1Mask,            XK_m,      floatpos,       {.v = "-1p  1p" } }, // ↙ */
+	/* { Mod4Mask|Mod1Mask,            XK_comma,  floatpos,       {.v = " 0p  1p" } }, // ↓ */
+	{ Mod4Mask|Mod1Mask,            XK_period, floatpos,       {.v = " 1p  1p" } }, // ↘
 
 };
 
