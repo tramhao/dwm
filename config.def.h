@@ -5,7 +5,7 @@
 #define TERMCLASS "St"
 
 /* appearance */
-static unsigned int borderpx  = 3;        /* border pixel of windows */
+static unsigned int borderpx  = 2;        /* border pixel of windows */
 static unsigned int snap      = 32;       /* snap pixel */
 static unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static unsigned int gappiv    = 10;       /* vert inner gap between windows */
@@ -27,7 +27,7 @@ static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
 static char selfgcolor[]            = "#eeeeee";
-static char selbordercolor[]        = "#770000";
+static char selbordercolor[]        = "#cc00cc";
 static char selbgcolor[]            = "#005577";
 static const unsigned int baralpha = 0xc5;
 static const unsigned int borderalpha = OPAQUE;
@@ -66,11 +66,19 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	*/
 	/* class    instance      title       	 tags mask    	iscentered	isfloating   floatpos	isterminal  noswallow  monitor */
-	{ "Gimp",     NULL,       NULL,       	    1 << 8,       0,		0,           NULL,	  0,         0,        -1 },
-	{ TERMCLASS,   NULL,       NULL,       	    0,            0,		0,           NULL,	  1,         0,        -1 },
-	{ NULL,       NULL,       "Event Tester",   0,            0,		0,           NULL,	  0,         1,        -1 },
-	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     0,		1,           NULL,	  1,         0,        -1 },
-	{ NULL,      "spcalc",    NULL,       	    SPTAG(1),     0,		1,           NULL,	  1,         0,        -1 },
+	{ "Gimp",     NULL,       NULL,       	    1 << 3,       0,		0,          NULL,	 0,         1,        -1 },
+	{ "Darktable", NULL,       NULL,       	    1 << 4,       0,		0,          NULL,	 0,         1,        -1 },
+	{ "krita",     NULL,       NULL,       	    1 << 3,       0,		0,          NULL,	 0,         1,        -1 },
+	{ "dolphin",   NULL,       NULL,       	    1 << 2,       0,		0,          NULL,	 0,         1,        -1 },
+	{ "Blender",     NULL,     NULL,       	    1 << 4,       0,		0,          NULL,	 0,         1,        -1 },
+	{ "Blueman-manager", NULL, NULL,       	    0, 		  1,		1,          NULL,	 0,         1,        -1 },
+	{ TERMCLASS,   NULL,       NULL,       	    0,            0,		0,          NULL,	 1,         0,        -1 },
+	{ NULL,       NULL,       "Event Tester",   0,            0,		0,          NULL,	 0,         1,        -1 },
+	{ NULL,      "spterm",    NULL,       	    SPTAG(0),     0,		1,          "75% 60% 50% 80%",	 1,         0,        -1 },
+	{ NULL,      "spcalc",    NULL,       	    SPTAG(1),     0,		1,          "10% 80% 20% 40%",	 1,         0,        -1 },
+	{ "Brave-browser",   NULL,       NULL,      1 << 1, 	  0,		0,          NULL,	 0,         0,        -1 },
+	{ "Lutris",   NULL,       NULL,             1 << 5, 	  0,		0,          NULL,	 0,         1,        -1 },
+	{ NULL,		"mydropdown",    NULL,      0,  	  0,		1,          NULL,	 1,         0,        -1 },
 };
 
 /* layout(s) */
@@ -220,7 +228,9 @@ static Key keys[] = {
 	{ MODKEY,			XK_apostrophe,	togglescratch,	{.ui = 1} },
 	/* { MODKEY|ShiftMask,		XK_apostrophe,	spawn,		SHCMD("") }, */
 	{ MODKEY,			XK_Return,	spawn,		{.v = termcmd } },
-	{ MODKEY|ShiftMask,		XK_Return,	togglescratch,	{.ui = 0} },
+	{ MODKEY|ShiftMask,		XK_Return,	spawn,		SHCMD("samedir") },
+	{ 0,				XK_F12,		togglescratch,	{.ui = 0} },
+	{ 0,				XK_Insert,	togglescratch,	{.ui = 0} },
 
 	{ MODKEY,			XK_z,		incrgaps,	{.i = +3 } },
 	/* { MODKEY|ShiftMask,		XK_z,		spawn,		SHCMD("") }, */
@@ -385,4 +395,5 @@ static Button buttons[] = {
 	{ ClkTagBar,		0,		Button4,	shiftview,	{.i = -1} },
 	{ ClkTagBar,		0,		Button5,	shiftview,	{.i = 1} },
 	{ ClkRootWin,		0,		Button2,	togglebar,	{0} },
+	{ ClkRootWin,		0,		Button3,	spawn,		SHCMD("wallpaper.sh") },
 };
