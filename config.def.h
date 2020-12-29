@@ -25,11 +25,11 @@ static const int showsystray             = 1;   /* 0 means no systray */
 static char *fonts[]          = { "monospace:size=12", "JoyPixels:pixelsize=12:antialias=true:autohint=true"  };
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
-static char normfgcolor[]           = "#bbbbbb";
+static char normfgcolor[]           = "#eeeeee";
 static char selfgcolor[]            = "#eeeeee";
 static char selbordercolor[]        = "#cc00cc";
-static char selbgcolor[]            = "#005577";
-static const unsigned int baralpha = 0x75;
+static char selbgcolor[]            = "#222222";
+static const unsigned int baralpha = 0xa0;
 static const unsigned int borderalpha = OPAQUE;
 static char *colors[][3] = {
        /*               fg           bg           border   */
