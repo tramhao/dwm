@@ -1,5 +1,6 @@
 /* See LICENSE file for copyright and license details. */
 
+
 /* Constants */
 #define TERMINAL "st"
 #define TERMCLASS "St"
